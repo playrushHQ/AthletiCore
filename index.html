@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AthletiCore Hub</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        .active-tab { border-bottom: 4px solid #f59e0b; color: #f59e0b; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
+
+    <!-- GLOBAL NAVBAR -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 px-4 lg:px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center justify-between w-full md:w-auto">
+            <h1 class="text-2xl font-black tracking-wider text-amber-500">ATHLETI<span class="text-white">CORE</span></h1>
+            <span class="bg-slate-800 text-xs px-2.5 py-1 rounded text-slate-400 font-mono ml-3 border border-slate-700">2-SITES-IN-1</span>
+        </div>
+
+        <!-- SEARCH BAR -->
+        <div class="relative w-full md:w-96">
+            <input type="text" id="globalSearch" oninput="executeSearch()" placeholder="Search any athlete, school, state, or meet..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-amber-500 placeholder-slate-500 transition-colors">
+            <div id="searchResults" class="absolute left-0 right-0 mt-2 bg-slate-900 border border-slate-700 rounded-lg shadow-2xl max-h-96 overflow-y-auto hidden z-50 p-2"></div>
+        </div>
+
+        <!-- WALLET & OAUTH PORTALS -->
+        <div class="flex items-center gap-4 w-full md:w-auto justify-end">
+            <div class="bg-slate-950 border border-slate-800 px-4 py-1.5 rounded-full flex items-center gap-2">
+                <span class="text-amber-500 font-bold">⚡ RUN:</span>
+                <span id="userWallet" class="font-mono font-bold text-emerald-400">2500</span>
+            </div>
+            <button onclick="toggleAuthModal()" id="authBtn" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-sm transition-all">Sign In</button>
+        </div>
+    </header>
+
+    <!-- NAVIGATION PORTALS -->
+    <nav class="bg-slate-900/60 border-b border-slate-800 flex justify-center text-center">
+        <button id="tabTrack" onclick="switchPortal('track')" class="w-1/2 py-4 font-bold tracking-wide active-tab uppercase text-sm md:text-base transition-all">🏃 Track & XC Foundation</button>
+        <button id="tabBall" onclick="switchPortal('ball')" class="w-1/2 py-4 font-bold tracking-wide text-slate-400 uppercase text-sm md:text-base transition-all">🏈 Basketball & Football Stadium</button>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <section class="lg:col-span-2 space-y-8">
+            <div id="portalTrack" class="space-y-8">
+                <div class="border-l-4 border-amber-500 pl-3">
+                    <h2 class="text-xl font-extrabold uppercase tracking-wide">Live Meets & Active Splits</h2>
+                    <p class="text-sm text-slate-400">Ongoing invitations and multi-athlete cross-country scorecards</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-3">
+                        <div class="flex justify-between items-center"><span class="bg-emerald-500/10 text-emerald-400 text-xs font-bold px-2 py-0.5 rounded border border-emerald-500/20">LIVE RESULTS</span> <span class="text-xs text-slate-500">Event 12: 5000m Race</span></div>
+                        <h3 class="text-lg font-bold">Nike Cross Nationals (NXN)</h3>
+                        <div class="space-y-1.5 font-mono text-sm pt-2">
+                            <div class="flex justify-between text-amber-500"><span>1. Katelyn Tuohy</span> <span>16:07.8</span></div>
+                            <div class="flex justify-between text-slate-300"><span>2. Parker Valby</span> <span>16:12.4</span></div>
+                            <div class="flex justify-between text-slate-400"><span>3. Tuohy (Split 3k)</span> <span>9:32.1</span></div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-3">
+                        <div class="flex justify-between items-center"><span class="bg-emerald-500/10 text-emerald-400 text-xs font-bold px-2 py-0.5 rounded border border-emerald-500/20">LIVE FIELD</span> <span class="text-xs text-slate-500">Event 4: Men's 100m</span></div>
+                        <h3 class="text-lg font-bold">Texas Relays 2025</h3>
+                        <div class="space-y-1.5 font-mono text-sm pt-2">
+                            <div class="flex justify-between text-amber-500"><span>1. Noah Lyles</span> <span>9.92s</span></div>
+                            <div class="flex justify-between text-slate-300"><span>2. Christian Coleman</span> <span>9.96s</span></div>
+                            <div class="flex justify-between text-slate-400"><span>3. Fred Kerley</span> <span>10.01s</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2">🇺🇸 Comprehensive National Meets Directory</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead>
+                                <tr class="border-b border-slate-800 text-slate-400 font-mono text-xs">
+                                    <th class="pb-3">Meet Event Name</th>
+                                    <th class="pb-3">Sanctioned Location</th>
+                                    <th class="pb-3">Date</th>
+                                    <th class="pb-3 text-right">Category</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800/60 font-medium">
+                                {% for meet in database.all_meets %}
+                                <tr>
+                                    <td class="py-3 text-amber-500 font-semibold">{{ meet.name }}</td>
+                                    <td class="py-3 text-slate-300">{{ meet.location }}</td>
+                                    <td class="py-3 text-slate-400">{{ meet.date }}</td>
+                                    <td class="py-3 text-right"><span class="bg-slate-950 text-slate-400 border border-slate-800 text-xs px-2 py-0.5 rounded">{{ meet.type }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="portalBall" class="space-y-8 hidden">
+                <div class="border-l-4 border-orange-500 pl-3">
+                    <h2 class="text-xl font-extrabold uppercase tracking-wide">Live High-Stake Arenas</h2>
+                    <p class="text-sm text-slate-400">Real-time point variations, instant play-by-plays, and predictive token slips</p>
+                </div>
+
+                <div class="space-y-4">
+                    <h3 class="text-md font-mono tracking-wider uppercase text-slate-400">🏈 Gridiron Division Matchups</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="footballContainer"></div>
+                </div>
+
+                <div class="space-y-4">
+                    <h3 class="text-md font-mono tracking-wider uppercase text-slate-400">🏀 Basketball Conference Standings</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="basketballContainer"></div>
+                </div>
+            </div>
+        </section>
+
+        <aside class="space-y-8">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+                <h3 class="text-lg font-bold text-amber-500 flex items-center gap-2">💰 RUN Betting Slip Console</h3>
+                <p class="text-xs text-slate-400">Select an active game from the ball sports portal tab to place predictions using your account tokens.</p>
+                <div id="activeSlip" class="bg-slate-950 border border-slate-800 p-4 rounded-lg space-y-3 hidden">
+                    <div class="flex justify-between text-xs font-mono"><span id="slipSport" class="text-slate-400">FOOTBALL</span> <button onclick="clearSlip()" class="text-rose-400 hover:underline">Cancel</button></div>
+                    <h4 id="slipTeams" class="font-bold text-sm">Home vs Away</h4>
+                    <div class="flex gap-2">
+                        <button onclick="setTeamWager('home')" id="btnSlipHome" class="flex-1 text-center bg-slate-900 border border-slate-700 py-1.5 rounded text-xs font-bold transition-all">Home</button>
+                        <button onclick="setTeamWager('away')" id="btnSlipAway" class="flex-1 text-center bg-slate-900 border border-slate-700 py-1.5 rounded text-xs font-bold transition-all">Away</button>
+                    </div>
+                    <input type="number" id="slipAmount" placeholder="Amount of RUN..." class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm font-mono focus:outline-none focus:border-amber-500">
+                    <button onclick="submitWagerCircuit()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black py-2 rounded text-sm uppercase tracking-wider transition-all">Lock Wager Parameters</button>
+                </div>
+                <div id="wagerFeedback" class="text-center text-xs font-mono py-1 hidden"></div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🛒 Prestige Athlete Marketplace</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center bg-slate-950 border border-slate-800 p-3 rounded-lg">
+                        <div>
+                            <p class="text-sm font-bold text-white">🥇 Golden Crown Badge</p>
+                            <p class="text-xs text-slate-400">Adds an icon next to your posts</p>
+                        </div>
+                        <button onclick="buyMarketItem('Crown Badge', 600)" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs px-3 py-1.5 rounded transition-all">600 RUN</button>
+                    </div>
+                    <div class="flex justify-between items-center bg-slate-950 border border-slate-800 p-3 rounded-lg">
+                        <div>
+                            <p class="text-sm font-bold text-white">👟 Aero Carbon Pro Spikes</p>
+                            <p class="text-xs text-slate-400">Unlocks custom profile aesthetics</p>
+                        </div>
+                        <button onclick="buyMarketItem('Carbon Spikes', 1200)" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs px-3 py-1.5 rounded transition-all">1200 RUN</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">💬 The Locker Room Social Feed</h3>
+                <div id="chatFeed" class="space-y-3 max-h-64 overflow-y-auto pr-1 text-sm font-medium">
+                    <div class="bg-slate-950 border border-slate-800/80 p-2.5 rounded-lg"><span class="text-amber-500 font-bold">@TrackStar_2026:</span> Lyles' 100m split at Texas Relays was insane to watch live.</div>
+                    <div class="bg-slate-950 border border-slate-800/80 p-2.5 rounded-lg"><span class="text-orange-400 font-bold">@GridironFanatic:</span> Mater Dei vs Bosco coming right down to the final play wire!</div>
+                </div>
+                <div class="flex gap-2 pt-2">
+                    <input type="text" id="chatInput" placeholder="Post athlete insight..." class="flex-1 bg-slate-950 border border-slate-700 rounded px-3 py-1.5 text-xs focus:outline-none focus:border-amber-500">
+                    <button onclick="sendChatMessage()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 px-3 py-1.5 rounded text-xs font-bold transition-all">Post</button>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <div id="authModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-sm p-6 space-y-6 text-center">
+            <div>
+                <h3 class="text-xl font-bold">Secure Gateways</h3>
+                <p class="text-xs text-slate-400 mt-1">Connect your credentials to synchronize data vaults</p>
+            </div>
+            <div class="space-y-2.5">
+                <button onclick="confirmOAuthGate('Google')" class="w-full bg-white text-slate-900 font-bold py-2 px-4 rounded-lg text-sm flex items-center justify-center gap-2 hover:bg-slate-100 transition-all">⚡ Authenticate with Google ID</button>
+                <button onclick="confirmOAuthGate('Apple')" class="w-full bg-black text-white border border-slate-800 font-bold py-2 px-4 rounded-lg text-sm flex items-center justify-center gap-2 hover:bg-slate-900 transition-all">🍏 Authenticate with Apple ID</button>
+            </div>
+            <button onclick="toggleAuthModal()" class="text-xs text-slate-500 hover:underline">Dismiss Panel</button>
+        </div>
+    </div>
+
+    <script>
+        let walletBalance = 2500;
+        let selectedPortal = 'track';
+        let activeWagerTarget = null;
+        let selectedWagerTeam = null;
+        let acquiredBadges = [];
+
+        function switchPortal(portal) {
+            selectedPortal = portal;
+            document.getElementById('tabTrack').classList.toggle('active-tab', portal === 'track');
+            document.getElementById('tabBall').classList.toggle('active-tab', portal === 'ball');
+            document.getElementById('tabTrack').classList.toggle('text-slate-400', portal !== 'track');
+            document.getElementById('tabBall').classList.toggle('text-slate-400', portal !== 'ball');
+            
+            document.getElementById('portalTrack').classList.toggle('hidden', portal !== 'track');
+            document.getElementById('portalBall').classList.toggle('hidden', portal !== 'ball');
+        }
+
+        function toggleAuthModal() {
+            const modal = document.getElementById('authModal');
+            modal.classList.toggle('hidden');
+        }
+
+        function confirmOAuthGate(provider) {
+            document.getElementById('authBtn').innerText = "@LoggedUser";
+            document.getElementById('authBtn').className = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs px-3 py-1.5 rounded-lg font-mono";
+            toggleAuthModal();
+            alert(`Federated validation transaction successful via ${provider} secure servers.`);
+        }
+
+        function executeSearch() {
+            const query = document.getElementById('globalSearch').value;
+            const resultsBox = document.getElementById('searchResults');
+            
+            if (query.trim().length === 0) {
+                resultsBox.classList.add('hidden');
+                return;
+            }
+
+            fetch(`/api/search?q=${encodeURIComponent(query)}`)
+                .then(res => res.json())
+                .then(data => {
+                    resultsBox.innerHTML = '';
+                    if (data.athletes.length === 0 && data.schools.length === 0) {
+                        resultsBox.innerHTML = `<div class="p-3 text-xs text-slate-500 font-mono text-center">Zero records matching query across America</div>`;
+                    } else {
+                        data.athletes.forEach(a => {
+                            let timesHtml = '';
+                            a.times.forEach(t => {
+                                timesHtml += `
+                                    <div class="bg-slate-950 border border-slate-800 p-2 rounded text-xs font-mono space-y-0.5 mt-1">
+                                        <div class="flex justify-between text-amber-500 font-bold"><span>${t.event}</span> <span>${t.time}</span></div>
+                                        <div class="flex justify-between text-slate-400 text-[11px]"><span>${t.meet} (${t.season})</span> <span>Place: ${t.place}</span></div>
+                                    </div>`;
+                            });
+
+                            const div = document.createElement('div');
+                            div.className = "p-3 bg-slate-900 rounded-lg border border-slate-800 mb-2 space-y-1";
+                            div.innerHTML = `
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <span class="text-xs uppercase bg-amber-500/10 text-amber-400 px-1.5 py-0.5 rounded font-mono font-bold">Athlete Profile</span>
+                                        <h4 class="text-sm font-bold text-white mt-1">${a.name}</h4>
+                                        <p class="text-xs text-slate-400">${a.school} | State: ${a.state}</p>
+                                    </div>
+                                    <span class="text-xs font-mono bg-slate-950 border border-slate-700 px-2 py-1 rounded text-slate-300">Total Meets: ${a.total_meets}</span>
+                                </div>
+                                <div class="pt-1"><p class="text-[11px] font-mono text-slate-400 uppercase tracking-wider font-bold">Archived Event Times:</p>${timesHtml}</div>
+                            `;
+                            resultsBox.appendChild(div);
+                        });
+
+                        data.schools.forEach(s => {
+                            const div = document.createElement('div');
+                            div.className = "p-3 bg-slate-900 rounded-lg border border-slate-800 mb-2 space-y-1";
+                            div.innerHTML = `
+                                <span class="text-xs uppercase bg-orange-500/10 text-orange-400 px-1.5 py-0.5 rounded font-mono font-bold">School Vault</span>
+                                <h4 class="text-sm font-bold text-white mt-1">${s.name} (${s.mascot})</h4>
+                                <p class="text-xs text-slate-400">Location Context: ${s.location}</p>
+                                <p class="text-[11px] font-mono text-slate-500">Hosted Meets: ${s.meets_hosted.join(', ')}</p>
+                            `;
+                            resultsBox.appendChild(div);
+                        });
+                    }
+                    resultsBox.classList.remove('hidden');
+                });
+        }
+
+        function updateLiveStreamContainers() {
+            fetch('/api/live-stream')
+                .then(res => res.json())
+                .then(data => {
+                    const fbBox = document.getElementById('footballContainer');
+                    const bkBox = document.getElementById('basketballContainer');
+                    
+                    fbBox.innerHTML = '';
+                    data.football.forEach(game => {
+                        fbBox.innerHTML += `
+                            <div onclick="initiateSlipTransaction('FOOTBALL', '${game.home} vs ${game.away}', '${game.id}')" class="bg-slate-900 border border-slate-800 hover:border-orange-500/40 cursor-pointer p-5 rounded-xl space-y-3 transition-all">
+                                <div class="flex justify-between items-center"><span class="bg-rose-500/10 text-rose-400 text-xs font-bold px-2 py-0.5 rounded border border-rose-500/20">${game.status}</span></div>
+                                <div class="flex justify-between items-center"><h4 class="font-extrabold text-md">${game.home} vs ${game.away}</h4> <span class="font-mono text-lg font-black text-amber-500">${game.score}</span></div>
+                                <div class="bg-slate-950 p-2.5 rounded border border-slate-850 text-xs font-mono text-slate-400 flex items-start gap-1.5"><span class="text-orange-500 font-bold">PLAY:</span><span>${game.play}</span></div>
+                            </div>`;
+                    });
+
+                    bkBox.innerHTML = '';
+                    data.basketball.forEach(game => {
+                        bkBox.innerHTML += `
+                            <div onclick="initiateSlipTransaction('BASKETBALL', '${game.home} vs ${game.away}', '${game.id}')" class="bg-slate-900 border border-slate-800 hover:border-orange-500/40 cursor-pointer p-5 rounded-xl space-y-3 transition-all">
+                                <div class="flex justify-between items-center"><span class="bg-rose-500/10 text-rose-400 text-xs font-bold px-2 py-0.5 rounded border border-rose-500/20">${game.status}</span></div>
+                                <div class="flex justify-between items-center"><h4 class="font-extrabold text-md">${game.home} vs ${game.away}</h4> <span class="font-mono text-lg font-black text-amber-500">${game.score}</span></div>
+                                <div class="bg-slate-950 p-2.5 rounded border border-slate-850 text-xs font-mono text-slate-400 flex items-start gap-1.5"><span class="text-orange-500 font-bold">PLAY:</span><span>${game.play}</span></div>
+                            </div>`;
+                    });
+                });
+        }
+
+        function initiateSlipTransaction(sport, teamLabel, id) {
+            activeWagerTarget = { sport, teamLabel, id };
+            document.getElementById('slipSport').innerText = sport;
+            document.getElementById('slipTeams').innerText = teamLabel;
+            document.getElementById('activeSlip').classList.remove('hidden');
+            selectedWagerTeam = null;
+            document.getElementById('btnSlipHome').className = "flex-1 text-center bg-slate-900 border border-slate-700 py-1.5 rounded text-xs font-bold text-slate-300";
+            document.getElementById('btnSlipAway').className = "flex-1 text-center bg-slate-900 border border-slate-700 py-1.5 rounded text-xs font-bold text-slate-300";
+        }
+
+        function setTeamWager(side) {
+            selectedWagerTeam = side;
+            document.getElementById('btnSlipHome').className = side === 'home' ? "flex-1 text-center bg-amber-500 text-slate-950 font-black py-1.5 rounded text-xs" : "flex-1 text-center bg-slate-900 border border-slate-700 py-1.5 rounded text-xs font-bold text-slate-300";
+            document.getElementById('btnSlipAway').className = side === 'away' ? "flex-1 text-center bg-amber-500 text-slate-950 font-black py-1.5 rounded text-xs" : "flex-1 text-center bg-slate-900 border border-slate-700 py-1.5 rounded text-xs font-bold text-slate-300";
+        }
+
+        function clearSlip() {
+            document.getElementById('activeSlip').classList.add('hidden');
+            activeWagerTarget = null;
+        }
+
+        function submitWagerCircuit() {
+            const amount = parseInt(document.getElementById('slipAmount').value);
+            const feedback = document.getElementById('wagerFeedback');
+            
+            if (!activeWagerTarget || !selectedWagerTeam || isNaN(amount) || amount <= 0) {
+                alert("Please configure wager allocation inputs completely.");
+                return;
+            }
+            if (amount > walletBalance) {
+                alert("Insufficient tokens inside ecosystem balance.");
+                return;
+            }
+
+            walletBalance -= amount;
+            document.getElementById('userWallet').innerText = walletBalance;
+            clearSlip();
+
+            feedback.className = "text-center text-xs font-mono py-1 text-amber-400";
+            feedback.innerText = `Processing ${amount} RUN prediction ledger...`;
+            feedback.classList.remove('hidden');
+
+            setTimeout(() => {
+                const won = Math.random() > 0.4;
+                if (won) {
+                    const winnings = Math.floor(amount * 1.95);
+                    walletBalance += winnings;
+                    document.getElementById('userWallet').innerText = walletBalance;
+                    feedback.className = "text-center text-xs font-mono py-1 text-emerald-400 font-bold";
+                    feedback.innerText = `Prediction clear! Credited +${winnings} RUN.`;
+                } else {
+                    feedback.className = "text-center text-xs font-mono py-1 text-rose-400";
+                    feedback.innerText = "Match outcome resolved against prediction.";
+                }
+            }, 5000);
+        }
+
+        function buyMarketItem(name, cost) {
+            if (walletBalance < cost) {
+                alert("Insufficient tokens for checkout transaction.");
+                return;
+            }
+            walletBalance -= cost;
+            document.getElementById('userWallet').innerText = walletBalance;
+            acquiredBadges.push(name);
+            alert(`Purchased ${name} successfully! Asset permanent flag initialized.`);
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            if (input.value.trim().length === 0) return;
+            
+            const chatBox = document.getElementById('chatFeed');
+            const div = document.createElement('div');
+            div.className = "bg-slate-950 border border-slate-800/80 p-2.5 rounded-lg";
+            
+            let badgeText = acquiredBadges.includes('Crown Badge') ? '👑 ' : '';
+            div.innerHTML = `<span class="text-amber-500 font-bold">${badgeText}@Athlete_User:</span> ${input.value}`;
+            
+            chatBox.appendChild(div);
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        updateLiveStreamContainers();
+        setInterval(updateLiveStreamContainers, 4000);
+    </script>
+</body>
+</html>
